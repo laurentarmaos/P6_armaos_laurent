@@ -6,7 +6,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "friend")
-public class Friend {
+public class Friend extends AbstractEntity{
 	
 	@Column(name = "user_id")
 	private Long userId;
