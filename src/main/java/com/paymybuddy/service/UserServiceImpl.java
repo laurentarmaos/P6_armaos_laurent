@@ -1,5 +1,6 @@
 package com.paymybuddy.service;
 
+
 import org.springframework.stereotype.Service;
 
 import com.paymybuddy.domain.dtos.UserCreate;
@@ -29,5 +30,6 @@ public class UserServiceImpl implements UserService{
 		
 		userRepo.save(entity);
 	}
+
 
 }

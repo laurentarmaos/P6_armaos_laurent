@@ -1,26 +1,43 @@
 package com.paymybuddy.controller;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.paymybuddy.domain.dtos.UserCreate;
 import com.paymybuddy.service.UserService;
 
-@RestController
-@RequestMapping("/account")
+@Controller
+@RequestMapping("/register")
 public class UserController {
 	
-	private final UserService service;
+	@Autowired
+	private UserService service;
+
 	
-	public UserController(UserService service) {
-		this.service = service;
+	@ModelAttribute("user")
+	public UserCreate userCreate () {
+		return new UserCreate();
 	}
 	
-	@PostMapping("/register")
-	public void createUser(@RequestBody UserCreate user) {
+	
+	@GetMapping
+    public String showRegistrationForm(Model model) {
+        return "register";
+    }
+	
+	
+	
+	@PostMapping
+	public @ResponseBody void createUser(@ModelAttribute("user") UserCreate user) {
+
 		service.createUser(user);
 	}
 

@@ -4,13 +4,20 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "transactions")
-public class Transaction extends AbstractEntity{
+public class Transaction {
+	
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	protected Long Id;
 	
 	@Column(name = "beneficiary_id")
 	private Long beneficiary;
@@ -34,7 +41,16 @@ public class Transaction extends AbstractEntity{
 	public Transaction() {
 		
 	}
+	
+	public Long getId() {
+		return Id;
+	}
+	
+	public void setId(Long Id) {
+		this.Id = Id;
+	}
 
+	
 	public Long getBeneficiary() {
 		return beneficiary;
 	}

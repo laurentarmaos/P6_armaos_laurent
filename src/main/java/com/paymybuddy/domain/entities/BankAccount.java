@@ -2,13 +2,20 @@ package com.paymybuddy.domain.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "bank_account")
-public class BankAccount extends AbstractEntity{
+public class BankAccount {
+	
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	protected Long Id;
 	
 	@Column(name = "amount")
 	private double amount;
@@ -20,6 +27,14 @@ public class BankAccount extends AbstractEntity{
 	
 	public BankAccount() {
 		
+	}
+	
+	public Long getId() {
+		return Id;
+	}
+	
+	public void setId(Long Id) {
+		this.Id = Id;
 	}
 	
 	

@@ -1,4 +1,4 @@
-package security;
+package com.paymybuddy.security;
 
 
 import org.springframework.context.annotation.Bean;
@@ -14,8 +14,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-            .antMatchers("/account/register", "/account/login")
-    		.permitAll();
+	            .antMatchers("/register", "/webjars/**")
+	    			.permitAll()
+        		.anyRequest().authenticated();
         
         return http.build();
     }
