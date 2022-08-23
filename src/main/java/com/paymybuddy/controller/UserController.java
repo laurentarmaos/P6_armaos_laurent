@@ -1,6 +1,8 @@
 package com.paymybuddy.controller;
 
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,34 +14,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.paymybuddy.domain.dtos.UserCreate;
+import com.paymybuddy.domain.entities.User;
 import com.paymybuddy.service.UserService;
 
 @Controller
-@RequestMapping("/register")
+//@RequestMapping("/register")
 public class UserController {
 	
 	@Autowired
 	private UserService service;
 
+
 	
-	@ModelAttribute("user")
-	public UserCreate userCreate () {
-		return new UserCreate();
-	}
-	
-	
-	@GetMapping
+	@GetMapping("/register")
     public String showRegistrationForm(Model model) {
+		model.addAttribute("user", new User());
         return "register";
     }
 	
 	
 	
-	@PostMapping
-	public @ResponseBody void createUser(@ModelAttribute("user") UserCreate user) {
+	@PostMapping("/register")
+	public @ResponseBody void createUser(@Valid @ModelAttribute("user") User user) {
 
 		service.createUser(user);
 	}
 
+	
 	
 }

@@ -1,8 +1,15 @@
 package com.paymybuddy.service;
 
 
-import com.paymybuddy.domain.dtos.UserCreate;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface UserService {
-	void createUser(UserCreate user);
+import com.paymybuddy.domain.entities.Role;
+import com.paymybuddy.domain.entities.User;
+
+public interface UserService extends UserDetailsService{
+	
+	User findByEmail(String email);
+	
+	void createUser(User user);
+	
 }
