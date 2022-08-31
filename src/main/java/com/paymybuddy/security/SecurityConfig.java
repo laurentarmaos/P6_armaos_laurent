@@ -9,8 +9,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.paymybuddy.service.UserService;
@@ -22,11 +20,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        http.csrf().disable()
             .authorizeRequests()
 	            .antMatchers("/register", "/webjars/**")
 	    			.permitAll()
-        		.anyRequest().authenticated()
+	    		.anyRequest().authenticated()
         		.and()
         		.formLogin()
         			.loginPage("/login")
@@ -35,32 +33,25 @@ public class SecurityConfig {
         return http.build();
     }
     
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-    	return new BCryptPasswordEncoder();
-    }
 
+    @Autowired
+    private EncoderConfig encode;
     
-//TODO /////////////////
-    
-//    @Autowired
-//	private UserService userService;
-//
-//    @Bean
-//    public DaoAuthenticationProvider authenticationProvider(){
-//        DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
-//        auth.setUserDetailsService(userService);
-//        auth.setPasswordEncoder(passwordEncoder());
-//        return auth;
-//    }
+    @Autowired
+	private UserService userService;
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
+        auth.setUserDetailsService(userService);
+        auth.setPasswordEncoder(encode.passwordEncoder());
+        return auth;
+    }
     
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
     	return authenticationConfiguration.getAuthenticationManager();
     }
-    
-//////////////////////////////////// 
-    
    
 
 }

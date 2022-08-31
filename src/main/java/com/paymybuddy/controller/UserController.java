@@ -1,6 +1,8 @@
 package com.paymybuddy.controller;
 
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.paymybuddy.domain.dtos.UserCreate;
 import com.paymybuddy.domain.entities.User;
 import com.paymybuddy.service.UserService;
 
@@ -23,7 +22,9 @@ public class UserController {
 	
 	@Autowired
 	private UserService service;
-
+    
+	@Autowired
+	private UserService userService;
 
 	
 	@GetMapping("/register")
@@ -40,6 +41,13 @@ public class UserController {
 		service.createUser(user);
 	}
 
+	
+	@GetMapping("/users")
+    public String users(Model model){
+        List<User> users = userService.findAllUsers();
+        model.addAttribute("users", users);
+        return "users";
+    }
 	
 	
 }

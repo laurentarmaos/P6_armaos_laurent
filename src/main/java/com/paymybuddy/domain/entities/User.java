@@ -1,32 +1,39 @@
 package com.paymybuddy.domain.entities;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.paymybuddy.validation.Pwdvalidation;
 
 @Entity
 @Table(name = "user")
-public class User {
+public class User implements UserDetails{
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected Long Id;
+	private Long userId;
 	
 	@NotEmpty
 	@Email
@@ -53,9 +60,6 @@ public class User {
 	@Column(name = "is_activate")
 	private boolean isActivate;
 	
-	@ManyToOne
-    @JoinColumn(name = "id_role")
-	private Role roleId;
 	
 	
 	@ManyToMany
@@ -71,19 +75,30 @@ public class User {
 	Set<User> users = new HashSet<User>();
 	
 	
-	
+
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(
+			name = "users_roles",
+			joinColumns = {
+					@JoinColumn(name = "user_id")
+			},
+			inverseJoinColumns = {
+					@JoinColumn(name = "role_id")
+			}
+	)
+	private List<Role> roles = new ArrayList<>();
 	
 	
 	public User() {
 		
 	}
 	
-	public Long getId() {
-		return Id;
+	public Long getUserId() {
+		return userId;
 	}
 	
-	public void setId(Long Id) {
-		this.Id = Id;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 	
 
@@ -139,12 +154,12 @@ public class User {
 		this.isActivate = isActivate;
 	}
 
-	public Role getRoleId() {
-		return roleId;
+	public List<Role> getRoles() {
+		return roles;
 	}
 
-	public void setRoleId(Role roleId) {
-		this.roleId = roleId;
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
 	}
 
 	public Set<User> getUsers() {
@@ -153,6 +168,42 @@ public class User {
 
 	public void setUsers(Set<User> users) {
 		this.users = users;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 	

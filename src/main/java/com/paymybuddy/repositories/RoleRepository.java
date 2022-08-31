@@ -9,5 +9,5 @@ import com.paymybuddy.domain.entities.Role;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
-	Optional <Role> findByRoleName(String roleName);
+	Role findByRoleName(String roleName);
 }
