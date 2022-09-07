@@ -6,8 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -23,15 +24,15 @@ import com.paymybuddy.security.EncoderConfig;
 	@Service
 	public class UserServiceImpl implements UserService{
 		
-		@Autowired
-	    private EncoderConfig encode;
-	
+		
+		private final EncoderConfig encode;
 		private final UserRepository userRepo;
 		private final RoleRepository roleRepo;
 		
-		public UserServiceImpl(UserRepository userRepo, RoleRepository roleRepo) {
+		public UserServiceImpl(UserRepository userRepo, RoleRepository roleRepo, EncoderConfig encode) {
 			this.userRepo = userRepo;
 			this.roleRepo = roleRepo;
+			this.encode = encode;
 		}
 		
 	
@@ -70,14 +71,6 @@ import com.paymybuddy.security.EncoderConfig;
 	        		);
 		}
 		
-	
-		
-
-		@Override
-		public User findByEmail(String email) {
-			return userRepo.findByEmail(email);
-		}
-		
 		
 		@Override
 	    public List<User> findAllUsers() {
@@ -96,4 +89,35 @@ import com.paymybuddy.security.EncoderConfig;
 	        return users;
 	    }
 
+		
+		public String userInfos() {
+	    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    	String userInfoEmail = authentication.getName();
+	    	
+	    	return userInfoEmail;
+	    }
+		
+		@Override
+		public void addContact(User dto){
+			
+			User user = new User();
+			String userMail = userInfos();
+			
+			user = userRepo.findByEmail(userMail);
+			
+			
+			User contact = new User();
+			String contactMail = dto.getEmail();
+			
+			contact = userRepo.findByEmail(contactMail);
+			
+			//TODO gérer erreur user = contact
+		
+			user.getFriends().add(contact);
+			
+			userRepo.save(user);
+		}
+		
+	
+		
 }

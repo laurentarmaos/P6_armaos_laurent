@@ -17,10 +17,10 @@ public class Transaction {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected Long Id;
+	protected Long transactionId;
 	
 	@Column(name = "beneficiary_id")
-	private Long beneficiary;
+	private User beneficiary;
 	
 	@Column(name = "description")
 	private String description;
@@ -42,20 +42,20 @@ public class Transaction {
 		
 	}
 	
-	public Long getId() {
-		return Id;
+	public Long getTransactionId() {
+		return transactionId;
 	}
 	
-	public void setId(Long Id) {
-		this.Id = Id;
+	public void setTransactionId(Long transactionId) {
+		this.transactionId = transactionId;
 	}
 
 	
-	public Long getBeneficiary() {
+	public User getBeneficiary() {
 		return beneficiary;
 	}
 
-	public void setBeneficiary(Long beneficiary) {
+	public void setBeneficiary(User beneficiary) {
 		this.beneficiary = beneficiary;
 	}
 

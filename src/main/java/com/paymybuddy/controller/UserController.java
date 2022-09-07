@@ -5,7 +5,9 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,20 +19,27 @@ import com.paymybuddy.domain.entities.User;
 import com.paymybuddy.service.UserService;
 
 @Controller
-//@RequestMapping("/register")
 public class UserController {
 	
-	@Autowired
-	private UserService service;
+	
+	private final UserService service;
     
-	@Autowired
-	private UserService userService;
-
+	public UserController(UserService service) {
+		this.service = service;
+	}
+	
 	
 	@GetMapping("/register")
     public String showRegistrationForm(Model model) {
 		model.addAttribute("user", new User());
-        return "register";
+        
+		// Redirect when already logged
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            return "register";
+        }
+ 
+        return "redirect:/";
     }
 	
 	
@@ -44,10 +53,22 @@ public class UserController {
 	
 	@GetMapping("/users")
     public String users(Model model){
-        List<User> users = userService.findAllUsers();
+        List<User> users = service.findAllUsers();
         model.addAttribute("users", users);
         return "users";
     }
 	
+	
+	@GetMapping("/addcontact")
+    public String showContactForm(Model model) {
+		model.addAttribute("friend", new User());
+        return "addcontact";
+    }
+	
+	@PostMapping("/addcontact")
+	public @ResponseBody void addContact(@ModelAttribute("friend") User friend) {
+		
+		service.addContact(friend);
+	}
 	
 }

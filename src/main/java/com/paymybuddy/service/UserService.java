@@ -10,10 +10,10 @@ import com.paymybuddy.domain.entities.User;
 
 public interface UserService extends UserDetailsService{
 	
-	User findByEmail(String email);
-	
 	void createUser(User user);
 	
 	List<User> findAllUsers();
+	
+	void addContact(User dto);
 	
 }

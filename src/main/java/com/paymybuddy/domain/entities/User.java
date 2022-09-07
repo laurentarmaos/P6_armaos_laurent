@@ -2,9 +2,7 @@ package com.paymybuddy.domain.entities;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -72,10 +70,14 @@ public class User implements UserDetails{
 					@JoinColumn(name = "user_id_friend")
 			}
 	)
-	Set<User> users = new HashSet<User>();
+	private List<User> friends = new ArrayList<>();
 	
 	
+	@ManyToMany(mappedBy = "friends")
+	private List<User> contacts = new ArrayList<>();
 
+	
+	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(
 			name = "users_roles",
@@ -162,12 +164,12 @@ public class User implements UserDetails{
 		this.roles = roles;
 	}
 
-	public Set<User> getUsers() {
-		return users;
+	public List<User> getFriends() {
+		return friends;
 	}
 
-	public void setUsers(Set<User> users) {
-		this.users = users;
+	public void setFriends(List<User> friends) {
+		this.friends = friends;
 	}
 
 	@Override

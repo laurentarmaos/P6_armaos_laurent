@@ -9,6 +9,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.paymybuddy.service.UserService;
@@ -22,8 +24,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
             .authorizeRequests()
-	            .antMatchers("/register", "/webjars/**")
-	    			.permitAll()
+	            .antMatchers("/register", "/webjars/**").permitAll()
 	    		.anyRequest().authenticated()
         		.and()
         		.formLogin()
@@ -53,5 +54,14 @@ public class SecurityConfig {
     	return authenticationConfiguration.getAuthenticationManager();
     }
    
+    
+    
+    // TODO trouver un meilleur emplacement pour la méthode
+    public String userInfos() {
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    	String userInfoEmail = authentication.getName();
+    	
+    	return userInfoEmail;
+    }
 
 }

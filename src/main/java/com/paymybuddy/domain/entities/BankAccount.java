@@ -15,7 +15,7 @@ public class BankAccount {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected Long Id;
+	protected Long AccountId;
 	
 	@Column(name = "amount")
 	private double amount;
@@ -29,12 +29,12 @@ public class BankAccount {
 		
 	}
 	
-	public Long getId() {
-		return Id;
+	public Long getAccountId() {
+		return AccountId;
 	}
 	
-	public void setId(Long Id) {
-		this.Id = Id;
+	public void setAccountId(Long AccountId) {
+		this.AccountId = AccountId;
 	}
 	
 	
@@ -46,4 +46,14 @@ public class BankAccount {
 		this.amount = amount;
 	}
 
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	
+	
 }
