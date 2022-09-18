@@ -2,7 +2,7 @@ package com.paymybuddy.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.paymybuddy.domain.entities.Transaction;
+import com.paymybuddy.entities.Transaction;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Long>{
 	

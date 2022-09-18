@@ -10,12 +10,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.paymybuddy.domain.entities.User;
+import com.paymybuddy.entities.User;
 import com.paymybuddy.service.UserService;
 
 @Controller
@@ -51,12 +52,27 @@ public class UserController {
 	}
 
 	
+	@GetMapping("/login")
+    public String login() {
+    	
+    	// Redirect when already logged
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            return "login";
+        }
+ 
+        return "redirect:/";
+    }
+	
+	
+	//////////////////////////////////////
 	@GetMapping("/users")
     public String users(Model model){
         List<User> users = service.findAllUsers();
         model.addAttribute("users", users);
         return "users";
     }
+	///////////////////////////////////////
 	
 	
 	@GetMapping("/addcontact")
@@ -66,9 +82,14 @@ public class UserController {
     }
 	
 	@PostMapping("/addcontact")
-	public @ResponseBody void addContact(@ModelAttribute("friend") User friend) {
+	public @ResponseBody String addContact(@ModelAttribute("friend") User friend, BindingResult result) throws Exception {
+		
+		if(result.hasErrors()) {
+			return "/addcontact";
+		}
 		
 		service.addContact(friend);
+		return "redirect:/index";
 	}
 	
 }

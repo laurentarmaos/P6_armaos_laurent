@@ -13,8 +13,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.paymybuddy.domain.entities.Role;
-import com.paymybuddy.domain.entities.User;
+import com.paymybuddy.entities.Role;
+import com.paymybuddy.entities.User;
 import com.paymybuddy.repositories.RoleRepository;
 import com.paymybuddy.repositories.UserRepository;
 import com.paymybuddy.security.EncoderConfig;
@@ -98,7 +98,7 @@ import com.paymybuddy.security.EncoderConfig;
 	    }
 		
 		@Override
-		public void addContact(User dto){
+		public void addContact(User dto) throws Exception{
 			
 			User user = new User();
 			String userMail = userInfos();
@@ -111,6 +111,9 @@ import com.paymybuddy.security.EncoderConfig;
 			
 			contact = userRepo.findByEmail(contactMail);
 			
+			if(userMail.equals(contactMail)) {
+				throw new Exception("can't add yourself as a contact");
+			}
 			//TODO gérer erreur user = contact
 		
 			user.getFriends().add(contact);

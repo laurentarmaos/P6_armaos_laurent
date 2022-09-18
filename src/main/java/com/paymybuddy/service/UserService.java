@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import com.paymybuddy.domain.entities.Role;
-import com.paymybuddy.domain.entities.User;
+import com.paymybuddy.entities.Role;
+import com.paymybuddy.entities.User;
 
 public interface UserService extends UserDetailsService{
 	
@@ -14,6 +14,6 @@ public interface UserService extends UserDetailsService{
 	
 	List<User> findAllUsers();
 	
-	void addContact(User dto);
+	void addContact(User dto) throws Exception;
 	
 }

@@ -1,4 +1,4 @@
-package com.paymybuddy.domain.entities;
+package com.paymybuddy.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,14 +15,14 @@ public class BankAccount {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected Long AccountId;
+	protected Long accountId;
 	
 	@Column(name = "amount")
 	private double amount;
 	
 	@ManyToOne
     @JoinColumn(name = "user_id")
-	private User user;
+	private User userId;
 
 	
 	public BankAccount() {
@@ -30,11 +30,11 @@ public class BankAccount {
 	}
 	
 	public Long getAccountId() {
-		return AccountId;
+		return accountId;
 	}
 	
-	public void setAccountId(Long AccountId) {
-		this.AccountId = AccountId;
+	public void setAccountId(Long accountId) {
+		this.accountId = accountId;
 	}
 	
 	
@@ -46,12 +46,12 @@ public class BankAccount {
 		this.amount = amount;
 	}
 
-	public User getUser() {
-		return user;
+	public User getUserId() {
+		return userId;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(User userId) {
+		this.userId = userId;
 	}
 
 	

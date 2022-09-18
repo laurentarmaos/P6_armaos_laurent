@@ -1,4 +1,4 @@
-package com.paymybuddy.domain.entities;
+package com.paymybuddy.entities;
 
 import java.util.ArrayList;
 import java.util.Collection;

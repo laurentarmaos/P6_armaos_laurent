@@ -1,4 +1,4 @@
-package com.paymybuddy.domain.entities;
+package com.paymybuddy.entities;
 
 import java.util.Date;
 
@@ -36,7 +36,7 @@ public class Transaction {
 	
 	@ManyToOne
     @JoinColumn(name = "user_id")
-	private User user;
+	private User userId;
 	
 	public Transaction() {
 		
@@ -96,12 +96,12 @@ public class Transaction {
 	}
 
 	
-	public User getUser() {
-		return user;
+	public User getUserId() {
+		return userId;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(User userId) {
+		this.userId = userId;
 	}
 	
 	

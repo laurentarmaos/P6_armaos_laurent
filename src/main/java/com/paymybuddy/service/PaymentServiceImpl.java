@@ -8,9 +8,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.paymybuddy.domain.entities.BankAccount;
-import com.paymybuddy.domain.entities.Transaction;
-import com.paymybuddy.domain.entities.User;
+import com.paymybuddy.entities.BankAccount;
+import com.paymybuddy.entities.Transaction;
+import com.paymybuddy.entities.User;
 import com.paymybuddy.repositories.BankAccountRepository;
 import com.paymybuddy.repositories.FriendRepository;
 import com.paymybuddy.repositories.TransactionRepository;
@@ -38,8 +38,10 @@ public class PaymentServiceImpl implements PaymentService{
     	return userInfoEmail;
     }
 
+	
+	// add a bank account to an user
 	@Override
-	public void addAcount() {
+	public void addAccount() {
 		
 		User user = new User();
 		String userMail = userInfos();
@@ -48,12 +50,13 @@ public class PaymentServiceImpl implements PaymentService{
 
 		BankAccount account = new BankAccount();
 		account.setAmount(0);
-		account.setUser(user);
+		account.setUserId(user);
 		
 		accountRepo.save(account);
 		
 	}
 	
+	// add amount from an previously added account
 	@Override
 	public void addAmountFromAccount(BankAccount dto, double amount) {
 		
@@ -74,6 +77,7 @@ public class PaymentServiceImpl implements PaymentService{
 	}
 	
 	
+	// find all accounts of connected user
 	@Override
 	public List<BankAccount> findAllAccounts(){
 		
@@ -89,7 +93,7 @@ public class PaymentServiceImpl implements PaymentService{
 				.collect(Collectors.toList());
 	}
 	
-	
+	// choose wich informations will be displayed from findAllAccounts() method
 	private BankAccount mapToAccounts(BankAccount account) {
 		BankAccount accounts = new BankAccount();
 		accounts.setAccountId(account.getAccountId());
@@ -98,6 +102,7 @@ public class PaymentServiceImpl implements PaymentService{
 	}
 
 	
+	// transfer money from connected user to selected contact
 	@Override
 	public void payContact(User dto, Transaction transactionDto) {
 		
@@ -121,7 +126,7 @@ public class PaymentServiceImpl implements PaymentService{
 		transaction.setCommission(transactionDto.getAmount() * commission);
 		transaction.setDate(new Date());
 		transaction.setDescription(transactionDto.getDescription());
-		transaction.setUser(user);
+		transaction.setUserId(user);
 		
 		if( (user.getAmount() - transactionDto.getAmount()) >= 0) {	
 			userRepo.save(user);
@@ -133,24 +138,24 @@ public class PaymentServiceImpl implements PaymentService{
 	}
 
 	
-	
-	@Override
-	public List<User> findAllContacts() {
-		
-		User user = new User();
-		String userMail = userInfos();
-		
-		user = userRepo.findByEmail(userMail);
+	//find all contacts from connected user
+//	@Override
+//	public List<User> findAllContacts() {
+//		
+//		User user = new User();
+//		String userMail = userInfos();
+//		
+//		user = userRepo.findByEmail(userMail);
+//
+//		List<User> contacts = (List<User>) friendRepo.findAllByUserId(user.getUserId());
+//		
+//		return contacts.stream()
+//                .map((contact) -> mapToUsers(contact))
+//                .collect(Collectors.toList());
+//	}
 
-		List<User> contacts = (List<User>) friendRepo.findAllByUserId(user.getUserId());
-		
-		return contacts.stream()
-                .map((contact) -> mapToUsers(contact))
-                .collect(Collectors.toList());
-	}
-
 	
-	
+	// choose wich informations will be displayed from findAllContacts() method
 	private User mapToUsers(User user){
         User users = new User();
         users.setFirstName(user.getFirstName());
@@ -159,5 +164,27 @@ public class PaymentServiceImpl implements PaymentService{
     }
 	
 	
-	//TODO findAllTransactions()
+	// find all transactions from connected user
+	@Override
+	public List<Transaction> findAllTransactions() {
+		
+		String userMail = userInfos();
+		User user = userRepo.findByEmail(userMail);
+		
+		List<Transaction> transactions = (List<Transaction>) transactionRepo.findAllByUserId(user.getUserId());
+		
+		return transactions.stream()
+				.map((transaction) -> mapToTransactions(transaction))
+				.collect(Collectors.toList());
+	}
+	
+	
+	//choose wich informations will be displayed from findAllTransactions() method
+	private Transaction mapToTransactions(Transaction transaction) {
+		Transaction transactions = new Transaction();
+		transactions.setBeneficiary(transaction.getBeneficiary());
+		transactions.setAmount(transaction.getAmount());
+		transactions.setDescription(transaction.getDescription());
+		return transactions;
+	}
 }
