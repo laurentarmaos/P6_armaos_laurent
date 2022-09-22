@@ -38,19 +38,6 @@ CREATE TABLE transactions(
 )ENGINE=InnoDB;
 
 
-#------------------------------------------------------------
-# Table: bank_account
-#------------------------------------------------------------
-
-CREATE TABLE bank_account(
-        account_id Int  Auto_increment  NOT NULL ,
-        amount     Int NOT NULL ,
-        user_id    Int NOT NULL
-	,CONSTRAINT bank_account_PK PRIMARY KEY (account_id)
-
-	,CONSTRAINT bank_account_user_FK FOREIGN KEY (user_id) REFERENCES user(user_id)
-)ENGINE=InnoDB;
-
 
 #------------------------------------------------------------
 # Table: role
@@ -62,9 +49,8 @@ CREATE TABLE role(
 	,CONSTRAINT role_PK PRIMARY KEY (role_id)
 )ENGINE=InnoDB;
 
-
 Insert into role (role_id, role_name)
-values (1, 'USER');
+values (1, 'USER'),(2, 'ADMIN');
 
 
 
@@ -90,8 +76,8 @@ CREATE TABLE users_roles(
         role_id Int NOT NULL ,
         user_id Int NOT NULL
 	,CONSTRAINT users_roles_PK PRIMARY KEY (role_id,user_id)
-
-	,CONSTRAINT users_roles_role_FK FOREIGN KEY (role_id) REFERENCES role(role_id)
 	,CONSTRAINT users_roles_user0_FK FOREIGN KEY (user_id) REFERENCES user(user_id)
+	,CONSTRAINT users_roles_role_FK FOREIGN KEY (role_id) REFERENCES role(role_id)
+	
 )ENGINE=InnoDB;
 
