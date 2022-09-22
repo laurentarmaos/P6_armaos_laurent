@@ -65,14 +65,14 @@ public class UserController {
     }
 	
 	
-	//////////////////////////////////////
-	@GetMapping("/users")
-    public String users(Model model){
-        List<User> users = service.findAllUsers();
-        model.addAttribute("users", users);
-        return "users";
-    }
-	///////////////////////////////////////
+	
+	@GetMapping("/contacts")
+	public String contacts(Model model) {
+		List<User> contacts = service.findAllFriends();
+		model.addAttribute("contacts", contacts);
+		return "contacts";
+	}
+	
 	
 	
 	@GetMapping("/addcontact")
@@ -82,14 +82,19 @@ public class UserController {
     }
 	
 	@PostMapping("/addcontact")
-	public @ResponseBody String addContact(@ModelAttribute("friend") User friend, BindingResult result) throws Exception {
+	public String addContact(@ModelAttribute("friend") User friend, BindingResult result, Model model) throws Exception {
 		
-		if(result.hasErrors()) {
-			return "/addcontact";
+		try {
+			service.addContact(friend);
+			return "redirect:/";
+			
+		} catch (Exception e) {
+
+			model.addAttribute("error", "can't add yourself !");
+			return "addcontact";
 		}
+	
 		
-		service.addContact(friend);
-		return "redirect:/index";
 	}
 	
 }

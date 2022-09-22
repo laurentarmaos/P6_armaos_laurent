@@ -8,11 +8,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.paymybuddy.entities.BankAccount;
 import com.paymybuddy.entities.Transaction;
 import com.paymybuddy.entities.User;
-import com.paymybuddy.repositories.BankAccountRepository;
-import com.paymybuddy.repositories.FriendRepository;
 import com.paymybuddy.repositories.TransactionRepository;
 import com.paymybuddy.repositories.UserRepository;
 
@@ -20,14 +17,10 @@ import com.paymybuddy.repositories.UserRepository;
 public class PaymentServiceImpl implements PaymentService{
 	
 	private final UserRepository userRepo;
-	private final BankAccountRepository accountRepo;
-	private final FriendRepository friendRepo;
 	private final TransactionRepository transactionRepo;
 	
-	public PaymentServiceImpl(UserRepository userRepo, BankAccountRepository accountRepo, FriendRepository friendRepo, TransactionRepository transactionRepo) {
+	public PaymentServiceImpl(UserRepository userRepo, TransactionRepository transactionRepo) {
 		this.userRepo = userRepo;
-		this.accountRepo = accountRepo;
-		this.friendRepo = friendRepo;
 		this.transactionRepo = transactionRepo;
 	}
 	
@@ -39,67 +32,21 @@ public class PaymentServiceImpl implements PaymentService{
     }
 
 	
-	// add a bank account to an user
-	@Override
-	public void addAccount() {
-		
-		User user = new User();
-		String userMail = userInfos();
-		
-		user = userRepo.findByEmail(userMail);
-
-		BankAccount account = new BankAccount();
-		account.setAmount(0);
-		account.setUserId(user);
-		
-		accountRepo.save(account);
-		
-	}
 	
-	// add amount from an previously added account
 	@Override
-	public void addAmountFromAccount(BankAccount dto, double amount) {
+	public void addAmountFromAccount(double amount) {
 		
 		User user = new User();
 		String userMail = userInfos();
 		
 		user = userRepo.findByEmail(userMail);
-		
-		BankAccount account = new BankAccount();
-		Long accountId = dto.getAccountId();
-		account = accountRepo.findByAccountId(accountId);
-		
+	
 		user.setAmount(user.getAmount() + amount);
-		account.setAmount(account.getAmount() - amount);
 		
 		userRepo.save(user);
-		accountRepo.save(account);
 	}
 	
-	
-	// find all accounts of connected user
-	@Override
-	public List<BankAccount> findAllAccounts(){
-		
-		User user = new User();
-		String userMail = userInfos();
-		
-		user = userRepo.findByEmail(userMail);
-		
-		List<BankAccount> accounts = (List<BankAccount>) accountRepo.findAllByUserId(user.getUserId());
-		
-		return accounts.stream()
-				.map((account) -> mapToAccounts(account))
-				.collect(Collectors.toList());
-	}
-	
-	// choose wich informations will be displayed from findAllAccounts() method
-	private BankAccount mapToAccounts(BankAccount account) {
-		BankAccount accounts = new BankAccount();
-		accounts.setAccountId(account.getAccountId());
-		
-		return accounts;
-	}
+
 
 	
 	// transfer money from connected user to selected contact

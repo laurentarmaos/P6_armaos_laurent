@@ -16,4 +16,7 @@ public interface UserService extends UserDetailsService{
 	
 	void addContact(User dto) throws Exception;
 	
+	List<User> findAllFriends();
+
+	User findConnectedUser();
 }

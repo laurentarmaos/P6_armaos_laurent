@@ -9,49 +9,36 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.paymybuddy.entities.BankAccount;
 import com.paymybuddy.entities.Transaction;
 import com.paymybuddy.entities.User;
 import com.paymybuddy.service.PaymentService;
+import com.paymybuddy.service.UserService;
 
 @Controller
 public class PaymentController {
 
 	private final PaymentService service;
+	private final UserService userService;
 	
-	public PaymentController(PaymentService service) {
+	public PaymentController(PaymentService service, UserService userService) {
 		this.service = service;
+		this.userService = userService;
 	}
 	
-	
-	// show form to add an account to connected user/////////////////////////////////////////////////////////////
+
+
 	@GetMapping("/accounts")
-	public String showAccountForm() {
+	public String showAccountForm(Model model) {
+		User user = userService.findConnectedUser();
+		model.addAttribute("user", user);
 		return "accounts";
 	}
 	
 	@PostMapping("/accounts")
-	public @ResponseBody void addAccount() {
-		service.addAccount();
+	public @ResponseBody void addAmountFromAccount(@ModelAttribute("user") User user, double amount) {
+		service.addAmountFromAccount(amount);
 	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	
-	
-	
-	// show list of user accounts to choose which will be used to add money to connected user/////////////////////
-	@GetMapping("/addfromaccount")
-	public String showAccounts(Model model) {
-		List<BankAccount> accounts = service.findAllAccounts();
-		model.addAttribute("userAccounts", accounts);
-		return "addfromaccount";
-	}
-	
-	@PostMapping("/addfromaccount")
-	public @ResponseBody void addAmountFromAccount(@ModelAttribute("userAccounts") BankAccount account, double amount ) {
-		service.addAmountFromAccount(account, amount);
-	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	
 	
 	
@@ -64,19 +51,6 @@ public class PaymentController {
 		return "transactions";
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	
-	
-	
-	// show all contacts to choose one to transfer money ////////////////////////////////////////////////////////
-//	@GetMapping("/transactions")
-//	public String contacts(Model model) {
-//		List<User> contacts = service.findAllContacts();
-//		model.addAttribute("contacts", contacts);
-//		return "transactions";
-//	}
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
 	
 	
 	

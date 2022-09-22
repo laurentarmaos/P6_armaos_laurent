@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -59,7 +60,6 @@ public class User implements UserDetails{
 	private boolean isActivate;
 	
 	
-	
 	@ManyToMany
 	@JoinTable(
 			name = "friend",
@@ -76,7 +76,7 @@ public class User implements UserDetails{
 	@ManyToMany(mappedBy = "friends")
 	private List<User> contacts = new ArrayList<>();
 
-	
+
 	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(

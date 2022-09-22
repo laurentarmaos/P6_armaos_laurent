@@ -10,13 +10,17 @@
 	
 	<h1>Add account</h1>
 	
-	<form th:action="@/accounts" method="post">
+	<form th:action="@/accounts"  th:object="${user}" method="POST">
 
-		<input type="submit" class="btn btn-success" value="Add an account">
+		<div class="form-group" >
+		    <label for="amount" class="control-label">Amount</label>
+            <input id="amount" type="number" class="form-control" />
+			<p th:errors="*{amount}" class= "text-danger" th:if="${#fields.hasErrors('amount')}"></p>	       
+        </div> 
+		<button type="submit" class="btn btn-success">Add amount</button>
+		
+		
 	</form>
 
-	
-	
-	
 	</body>
 </html>

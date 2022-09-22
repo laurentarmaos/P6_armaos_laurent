@@ -121,6 +121,23 @@ import com.paymybuddy.security.EncoderConfig;
 			userRepo.save(user);
 		}
 		
-	
+		@Override
+		public List<User> findAllFriends(){
+			User user = new User();
+			String userMail = userInfos();
+			
+			user = userRepo.findByEmail(userMail);
+			
+			return user.getFriends();
+		}
 		
+		@Override
+		public User findConnectedUser() {
+			User user = new User();
+			String userMail = userInfos();
+			
+			user = userRepo.findByEmail(userMail);
+			
+			return user;
+		}
 }
