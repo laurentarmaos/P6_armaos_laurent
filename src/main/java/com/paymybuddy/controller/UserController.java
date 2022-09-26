@@ -90,7 +90,7 @@ public class UserController {
 			
 		} catch (Exception e) {
 
-			model.addAttribute("error", "can't add yourself !");
+			model.addAttribute("error", "can't add yourself as a contact or add an already existant contact !");
 			return "addcontact";
 		}
 	

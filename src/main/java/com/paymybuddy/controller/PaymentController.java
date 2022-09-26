@@ -28,44 +28,59 @@ public class PaymentController {
 
 
 	@GetMapping("/accounts")
-	public String showAccountForm(Model model) {
-		User user = userService.findConnectedUser();
-		model.addAttribute("user", user);
+	public String showAccountForm() {
 		return "accounts";
 	}
 	
 	@PostMapping("/accounts")
-	public @ResponseBody void addAmountFromAccount(@ModelAttribute("user") User user, double amount) {
+	public @ResponseBody void addAmountFromAccount(@ModelAttribute("amount") double amount) {
 		service.addAmountFromAccount(amount);
 	}
 
 	
 	
-	
-	
-	// show all the previous transactions from connected user/////////////////////////////////////////////////////
-	@GetMapping("/transactions")
-	public String transactions(Model model) {
-		List<Transaction> transactions = service.findAllTransactions();
-		model.addAttribute("transactions", transactions);
-		return "transactions";
-	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	
-	
-	// show form to transfer money from connected user to a contact//////////////////////////////////////////////
 //	@GetMapping("/transactions")
-//	public String showTransactionForm(Model model) {
-//		model.addAttribute("transaction", new Transaction());
-//		model.addAttribute("friend", new User());
+//	public String transactions(Model model) {
+//		List<Transaction> transactions = service.findAllTransactions();
+//		model.addAttribute("transactions", transactions);
 //		return "transactions";
 //	}
 //	
-//	@PostMapping("/transactions")
-//	public @ResponseBody void payContact(@ModelAttribute("friend") User friend, @ModelAttribute("transaction") Transaction transaction) {
-//		service.payContact(friend, transaction);
+	
+	
+//	@GetMapping("/transactions")
+//	public String contacts(Model model) {
+//		List<User> contacts = userService.findAllFriends();
+//		model.addAttribute("contacts", contacts);
+//		return "transactions";
 //	}
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	
+	
+	
+	@GetMapping("/transactions")
+	public String showTransactionForm(Model model) {
+		model.addAttribute("transaction", new Transaction());
+		model.addAttribute("friend", new User());
+		
+		List<User> contacts = userService.findAllFriends();
+		model.addAttribute("contacts", contacts);
+		
+		return "transactions";
+	}
+	
+	
+	
+	@PostMapping("/transactions")
+	public @ResponseBody String payContact(@ModelAttribute("friend") User friend, @ModelAttribute("transaction") Transaction transaction, Model model) {
+		try {
+			service.payContact(friend, transaction);
+			return "transactions";
+			
+		} catch (Exception e) {
+			model.addAttribute("not enough amount on your account to proceed !");
+			return "transactions";
+		}
+		
+	}
 
 }

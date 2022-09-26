@@ -51,7 +51,7 @@ public class PaymentServiceImpl implements PaymentService{
 	
 	// transfer money from connected user to selected contact
 	@Override
-	public void payContact(User dto, Transaction transactionDto) {
+	public void payContact(User dto, Transaction transactionDto) throws Exception{
 		
 		double commission = 0.05;
 
@@ -76,30 +76,15 @@ public class PaymentServiceImpl implements PaymentService{
 		transaction.setUserId(user);
 		
 		if( (user.getAmount() - transactionDto.getAmount()) >= 0) {	
+			transactionRepo.save(transaction);
 			userRepo.save(user);
 			userRepo.save(contact);
-			transactionRepo.save(transaction);
 		} else {
-			//TODO gérer erreur amount < 0
+			throw new Exception("not enough amount on your account to proceed !");
 		}
 	}
 
-	
-	//find all contacts from connected user
-//	@Override
-//	public List<User> findAllContacts() {
-//		
-//		User user = new User();
-//		String userMail = userInfos();
-//		
-//		user = userRepo.findByEmail(userMail);
-//
-//		List<User> contacts = (List<User>) friendRepo.findAllByUserId(user.getUserId());
-//		
-//		return contacts.stream()
-//                .map((contact) -> mapToUsers(contact))
-//                .collect(Collectors.toList());
-//	}
+
 
 	
 	// choose wich informations will be displayed from findAllContacts() method

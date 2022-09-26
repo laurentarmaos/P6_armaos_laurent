@@ -9,11 +9,7 @@ public interface PaymentService {
 
 	void addAmountFromAccount(double amount);
 	
-	void payContact(User dto, Transaction transactionDto);
-	
-	//List<User> findAllContacts();
-	
-
+	void payContact(User dto, Transaction transactionDto)  throws Exception;
 	
 	List<Transaction> findAllTransactions();
 }

@@ -111,10 +111,19 @@ import com.paymybuddy.security.EncoderConfig;
 			
 			contact = userRepo.findByEmail(contactMail);
 			
-			if(userMail.equals(contactMail)) {
-				throw new Exception("can't add yourself as a contact");
+			
+			List<User> addedContacts = findAllFriends();
+			
+			for(int i = 0; i < addedContacts.size(); i++) {
+				User addedContact = new User();
+				addedContact = addedContacts.get(i);
+				
+				if(userMail.equals(contactMail) || contact.equals(addedContact)) {
+					throw new Exception("can't add yourself as a contact or add an already existant contact");
+				}
 			}
-			//TODO gérer erreur user = contact
+			
+
 		
 			user.getFriends().add(contact);
 			

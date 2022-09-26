@@ -10,12 +10,11 @@
 	
 	<h1>Add account</h1>
 	
-	<form th:action="@/accounts"  th:object="${user}" method="POST">
+	<form th:action="@{/accounts}" method="POST">
 
 		<div class="form-group" >
 		    <label for="amount" class="control-label">Amount</label>
-            <input id="amount" type="number" class="form-control" />
-			<p th:errors="*{amount}" class= "text-danger" th:if="${#fields.hasErrors('amount')}"></p>	       
+            <input id="amount" th:name="amount"  type="number" class="form-control" />	       
         </div> 
 		<button type="submit" class="btn btn-success">Add amount</button>
 		
