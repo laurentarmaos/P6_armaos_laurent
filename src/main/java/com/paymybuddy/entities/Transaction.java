@@ -1,9 +1,12 @@
 package com.paymybuddy.entities;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,13 +14,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name = "transactions")
 public class Transaction {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected Long transactionId;
+	private Long transactionId;
 	
 	@Column(name = "beneficiary_id")
 	private User beneficiary;
@@ -29,12 +36,12 @@ public class Transaction {
 	private double amount;
 	
 	@Column(name = "date")
-	private Date date;
+	private LocalDate date;
 	
 	@Column(name = "commission")
 	private double commission;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
 	private User userId;
 	
@@ -78,11 +85,11 @@ public class Transaction {
 	}
 
 	
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 

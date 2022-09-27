@@ -9,7 +9,7 @@ public interface PaymentService {
 
 	void addAmountFromAccount(double amount);
 	
-	void payContact(User dto, Transaction transactionDto)  throws Exception;
-	
 	List<Transaction> findAllTransactions();
+
+	void payContact(String contactMail, double amount, String description) throws Exception;
 }

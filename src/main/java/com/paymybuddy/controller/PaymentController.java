@@ -39,29 +39,8 @@ public class PaymentController {
 
 	
 	
-//	@GetMapping("/transactions")
-//	public String transactions(Model model) {
-//		List<Transaction> transactions = service.findAllTransactions();
-//		model.addAttribute("transactions", transactions);
-//		return "transactions";
-//	}
-//	
-	
-	
-//	@GetMapping("/transactions")
-//	public String contacts(Model model) {
-//		List<User> contacts = userService.findAllFriends();
-//		model.addAttribute("contacts", contacts);
-//		return "transactions";
-//	}
-//	
-	
-	
 	@GetMapping("/transactions")
 	public String showTransactionForm(Model model) {
-		model.addAttribute("transaction", new Transaction());
-		model.addAttribute("friend", new User());
-		
 		List<User> contacts = userService.findAllFriends();
 		model.addAttribute("contacts", contacts);
 		
@@ -71,9 +50,9 @@ public class PaymentController {
 	
 	
 	@PostMapping("/transactions")
-	public @ResponseBody String payContact(@ModelAttribute("friend") User friend, @ModelAttribute("transaction") Transaction transaction, Model model) {
+	public @ResponseBody String payContact(@ModelAttribute("friendMail") String friendMail, @ModelAttribute("transactionAmount") double transactionAmount, @ModelAttribute("transactionDesc") String transactionDesc, Model model) {
 		try {
-			service.payContact(friend, transaction);
+			service.payContact(friendMail, transactionAmount, transactionDesc);
 			return "transactions";
 			
 		} catch (Exception e) {

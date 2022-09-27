@@ -91,6 +91,10 @@ public class User implements UserDetails{
 	private List<Role> roles = new ArrayList<>();
 	
 	
+	@OneToMany(mappedBy = "userId", cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Transaction> transactions;
+	
+	
 	public User() {
 		
 	}

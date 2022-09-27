@@ -1,5 +1,7 @@
 package com.paymybuddy.service;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,38 +53,48 @@ public class PaymentServiceImpl implements PaymentService{
 	
 	// transfer money from connected user to selected contact
 	@Override
-	public void payContact(User dto, Transaction transactionDto) throws Exception{
+	public void payContact(String contactMail, double amount, String description) throws Exception{
 		
 		double commission = 0.05;
 
 		User user = new User();
 		String userMail = userInfos();
 		
-		user = userRepo.findByEmail(userMail);		
-		user.setAmount(user.getAmount() - ( transactionDto.getAmount() * (1 - commission)) );
+		user = userRepo.findByEmail(userMail);
 		
-		User contact = new User();
-		String contactMail = dto.getEmail();
 		
-		contact = userRepo.findByEmail(contactMail);
-		contact.setAmount(contact.getAmount() + ( transactionDto.getAmount() * (1 + commission)) );
-		
-		Transaction transaction = new Transaction();
-		transaction.setAmount(transactionDto.getAmount());
-		transaction.setBeneficiary(contact);
-		transaction.setCommission(transactionDto.getAmount() * commission);
-		transaction.setDate(new Date());
-		transaction.setDescription(transactionDto.getDescription());
-		transaction.setUserId(user);
-		
-		if( (user.getAmount() - transactionDto.getAmount()) >= 0) {	
-			transactionRepo.save(transaction);
-			userRepo.save(user);
-			userRepo.save(contact);
-		} else {
+		if( (user.getAmount() - amount) < 0) {
+			
 			throw new Exception("not enough amount on your account to proceed !");
 		}
+		
+		
+		user.setAmount(user.getAmount() -  amount );
+		
+		User contact = new User();
+		
+		contact = userRepo.findByEmail(contactMail);
+		contact.setAmount(contact.getAmount() + ( amount * (1 - commission)) );
+		
+		Transaction transaction = new Transaction();
+		
+		transaction.setAmount(amount);
+		transaction.setBeneficiary(contact);
+		transaction.setCommission(amount * commission);
+		
+		LocalDate date = LocalDate.now();
+		System.out.println(date);
+		transaction.setDate(date);
+		transaction.setDescription(description);
+		transaction.setUserId(user);
+		
+			
+		userRepo.save(user);
+		userRepo.save(contact);
+		transactionRepo.save(transaction);
+			
 	}
+	
 
 
 
