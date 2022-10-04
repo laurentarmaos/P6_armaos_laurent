@@ -1,9 +1,8 @@
 package com.paymybuddy.entities;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,9 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "transactions")
@@ -34,14 +30,14 @@ public class Transaction {
 	
 	@Column(name = "amount")
 	private double amount;
-	
+
 	@Column(name = "date")
 	private LocalDate date;
 	
 	@Column(name = "commission")
 	private double commission;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
     @JoinColumn(name = "user_id")
 	private User userId;
 	

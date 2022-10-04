@@ -8,6 +8,6 @@ import com.paymybuddy.entities.Transaction;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long>{
 	
-	Transaction findAllByUserId(Long UserId);
+	Transaction findAllByUserId(Long userId);
 
 }

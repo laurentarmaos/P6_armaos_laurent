@@ -1,10 +1,10 @@
 package com.paymybuddy.service;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -53,6 +53,7 @@ public class PaymentServiceImpl implements PaymentService{
 	
 	// transfer money from connected user to selected contact
 	@Override
+	@Transactional
 	public void payContact(String contactMail, double amount, String description) throws Exception{
 		
 		double commission = 0.05;
@@ -83,15 +84,16 @@ public class PaymentServiceImpl implements PaymentService{
 		transaction.setCommission(amount * commission);
 		
 		LocalDate date = LocalDate.now();
-		System.out.println(date);
 		transaction.setDate(date);
+		System.out.println(transaction.getDate());
 		transaction.setDescription(description);
 		transaction.setUserId(user);
 		
+		user.getTransactions().add(transaction);
 			
 		userRepo.save(user);
-		userRepo.save(contact);
-		transactionRepo.save(transaction);
+//		userRepo.save(contact);
+//		transactionRepo.save(transaction);
 			
 	}
 	

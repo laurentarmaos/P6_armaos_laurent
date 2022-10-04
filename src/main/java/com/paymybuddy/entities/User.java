@@ -91,8 +91,8 @@ public class User implements UserDetails{
 	private List<Role> roles = new ArrayList<>();
 	
 	
-	@OneToMany(mappedBy = "userId", cascade=CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<Transaction> transactions;
+	@OneToMany(mappedBy = "userId")
+	private List<Transaction> transactions = new ArrayList<>();
 	
 	
 	public User() {
@@ -174,6 +174,10 @@ public class User implements UserDetails{
 
 	public void setFriends(List<User> friends) {
 		this.friends = friends;
+	}
+	
+	public List<Transaction> getTransactions(){
+		return transactions;
 	}
 
 	@Override
