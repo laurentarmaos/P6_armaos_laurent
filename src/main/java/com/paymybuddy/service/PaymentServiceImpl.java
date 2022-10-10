@@ -1,11 +1,12 @@
 package com.paymybuddy.service;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class PaymentServiceImpl implements PaymentService{
 	
 	private final UserRepository userRepo;
 	private final TransactionRepository transactionRepo;
+	
 	
 	public PaymentServiceImpl(UserRepository userRepo, TransactionRepository transactionRepo) {
 		this.userRepo = userRepo;
@@ -36,25 +38,41 @@ public class PaymentServiceImpl implements PaymentService{
 	
 	
 	@Override
-	public void addAmountFromAccount(double amount) {
+	public void addAmountFromAccount(User dto) {
 		
 		User user = new User();
 		String userMail = userInfos();
 		
 		user = userRepo.findByEmail(userMail);
 	
-		user.setAmount(user.getAmount() + amount);
+		user.setAmount(user.getAmount() + dto.getAmount());
 		
 		userRepo.save(user);
 	}
 	
 
+	@Override
+	public void addAmountToAccount(User dto) throws Exception {
+		User user = new User();
+		String userMail = userInfos();
+		
+		user = userRepo.findByEmail(userMail);
+		
+		if( (user.getAmount() - dto.getAmount()) < 0) {
+			
+			throw new Exception("not enough amount on your account to proceed !");
+		}
+	
+		user.setAmount(user.getAmount() - dto.getAmount());
+		
+		userRepo.save(user);
+	}
 
 	
 	// transfer money from connected user to selected contact
 	@Override
 	@Transactional
-	public void payContact(String contactMail, double amount, String description) throws Exception{
+	public void payContact(User friend, Transaction dtoTransaction) throws Exception{
 		
 		double commission = 0.05;
 
@@ -64,73 +82,67 @@ public class PaymentServiceImpl implements PaymentService{
 		user = userRepo.findByEmail(userMail);
 		
 		
-		if( (user.getAmount() - amount) < 0) {
+		if( (user.getAmount() - dtoTransaction.getAmount()) < 0) {
 			
 			throw new Exception("not enough amount on your account to proceed !");
 		}
 		
 		
-		user.setAmount(user.getAmount() -  amount );
+		user.setAmount(user.getAmount() -  dtoTransaction.getAmount() );
 		
 		User contact = new User();
 		
-		contact = userRepo.findByEmail(contactMail);
-		contact.setAmount(contact.getAmount() + ( amount * (1 - commission)) );
+		contact = userRepo.findByEmail(friend.getEmail());
+		contact.setAmount(contact.getAmount() + ( dtoTransaction.getAmount() * (1 - commission)) );
 		
 		Transaction transaction = new Transaction();
 		
-		transaction.setAmount(amount);
+		transaction.setAmount(dtoTransaction.getAmount());
 		transaction.setBeneficiary(contact);
-		transaction.setCommission(amount * commission);
+		transaction.setCommission(dtoTransaction.getAmount() * commission);
 		
 		LocalDate date = LocalDate.now();
 		transaction.setDate(date);
-		System.out.println(transaction.getDate());
-		transaction.setDescription(description);
+		transaction.setDescription(dtoTransaction.getDescription());
 		transaction.setUserId(user);
 		
-		user.getTransactions().add(transaction);
-			
 		userRepo.save(user);
-//		userRepo.save(contact);
-//		transactionRepo.save(transaction);
+		transactionRepo.save(transaction);
 			
 	}
 	
 
-
-
 	
-	// choose wich informations will be displayed from findAllContacts() method
-	private User mapToUsers(User user){
-        User users = new User();
-        users.setFirstName(user.getFirstName());
-        users.setLastName(user.getLastName());
-        return users;
-    }
+//	// choose wich informations will be displayed from findAllContacts() method
+//	private User mapToUsers(User user){
+//        User users = new User();
+//        users.setFirstName(user.getFirstName());
+//        users.setLastName(user.getLastName());
+//        return users;
+//    }
 	
 	
 	// find all transactions from connected user
 	@Override
-	public List<Transaction> findAllTransactions() {
+	public Page<Transaction> findAllTransactions(int pageNo, int pageSize) {
+
 		
 		String userMail = userInfos();
 		User user = userRepo.findByEmail(userMail);
 		
-		List<Transaction> transactions = (List<Transaction>) transactionRepo.findAllByUserId(user.getUserId());
-		
-		return transactions.stream()
-				.map((transaction) -> mapToTransactions(transaction))
-				.collect(Collectors.toList());
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+		Page<Transaction> transactionList = transactionRepo.findAllByUserId(user, pageable);
+
+		return transactionList;
 	}
 	
 	
-	//choose wich informations will be displayed from findAllTransactions() method
-	private Transaction mapToTransactions(Transaction transaction) {
-		Transaction transactions = new Transaction();
-		transactions.setBeneficiary(transaction.getBeneficiary());
-		transactions.setAmount(transaction.getAmount());
-		transactions.setDescription(transaction.getDescription());
-		return transactions;
-	}
+//	//choose wich informations will be displayed from findAllTransactions() method
+//	private Transaction mapToTransactions(Transaction transaction) {
+//		Transaction transactions = new Transaction();
+//		transactions.setBeneficiary(transaction.getBeneficiary());
+//		transactions.setAmount(transaction.getAmount());
+//		transactions.setDescription(transaction.getDescription());
+//		return transactions;
+//	}
 }

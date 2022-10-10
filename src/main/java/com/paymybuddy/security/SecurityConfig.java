@@ -56,12 +56,11 @@ public class SecurityConfig {
    
     
     
-    // TODO trouver un meilleur emplacement pour la méthode
-    public String userInfos() {
-    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    	String userInfoEmail = authentication.getName();
-    	
-    	return userInfoEmail;
-    }
+//    public String userInfos() {
+//    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//    	String userInfoEmail = authentication.getName();
+//    	
+//    	return userInfoEmail;
+//    }
 
 }

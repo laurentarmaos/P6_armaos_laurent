@@ -7,6 +7,23 @@
 
   </head>
 	<body>
+	
+		<header class="row">
+		
+			<div class="col-md-6">
+				<a class="navbar-brand" th:href="@{/index}">Pay My Buddy</a>
+			</div>
+			
+			<div class="col-md-6">
+				<a class="navbar-brand" th:href="@{/}">Home</a>
+				<a class="navbar-brand" th:href="@{/transactions/1}">Transfer</a>
+				<a class="navbar-brand" th:href="@{/accounts}">Profile</a>
+				<a class="navbar-brand" th:href="@{/addcontact}">Contact</a>
+				<a class="navbar-brand" th:href="@{/logout}">Log off</a>
+			</div>
+		
+		</header>
+	
 		<div class="container">
 		    <div class="row">
 		        <div class="col-md-6 col-md-offset-3">
@@ -17,12 +34,13 @@
 				
 					<form th:action="@{/addcontact}" th:object="${friend}" method="POST">
 					
-					<p class="error-message" th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.errors('global')}" th:text="${error}"></p>
+					<p class="text-danger" th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.errors('global')}" th:text="${error}"></p>
 				        
 			           <div class="form-group" th:classappend="${#fields.hasErrors('email')}? 'has-error':''" >
 							<label for="email" class="control-label">E-mail</label>
 			                <input id="email" class="form-control" th:field="*{email}"/>
-			                <p class="error-message" th:if="${error}" th:text="${error}"></p>          
+			                <p class="text-danger" th:if="${error}" th:text="${error}"></p>
+			                <p class="text-danger" th:if="${errorNotFound}" th:text="${errorNotFound}"></p>
 			          </div>
 			           
 					   <button type="submit" class="btn btn-success">Add</button>

@@ -1,12 +1,30 @@
 <!doctype html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PayMyBuddy</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet">
   </head>
   <body>
+  
+  	<header class="row">
+	
+		<div class="col-md-6">
+			<a class="navbar-brand" th:href="@{/}">Pay My Buddy</a>
+		</div>
+		
+		<div class="col-md-6">
+			<a class="navbar-brand" th:href="@{/}">Home</a>
+			<a class="navbar-brand" th:href="@{/transactions/1}">Transfer</a>
+			<a class="navbar-brand" th:href="@{/accounts}">Profile</a>
+			<a class="navbar-brand" th:href="@{/addcontact}">Contact</a>
+			<a class="navbar-brand" th:href="@{/logout}">Log off</a>
+		</div>
+	
+	</header>
+	
     <h1>PayMyBuddy</h1>
   </body>
 </html>

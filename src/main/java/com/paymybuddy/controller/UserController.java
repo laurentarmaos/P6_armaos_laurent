@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.paymybuddy.entities.User;
+import com.paymybuddy.repositories.UserRepository;
 import com.paymybuddy.service.UserService;
 
 @Controller
@@ -24,9 +25,11 @@ public class UserController {
 	
 	
 	private final UserService service;
+	private final UserRepository userRepo;
     
-	public UserController(UserService service) {
+	public UserController(UserService service, UserRepository userRepo) {
 		this.service = service;
+		this.userRepo = userRepo;
 	}
 	
 	
@@ -84,15 +87,26 @@ public class UserController {
 	@PostMapping("/addcontact")
 	public String addContact(@ModelAttribute("friend") User friend, BindingResult result, Model model) throws Exception {
 		
-		try {
-			service.addContact(friend);
-			return "redirect:/";
+		if(userRepo.existsByEmail(friend.getEmail())) {
 			
-		} catch (Exception e) {
-
-			model.addAttribute("error", "can't add yourself as a contact or add an already existant contact !");
+			try {
+				service.addContact(friend);
+				return "redirect:/";
+				
+			} catch (Exception e) {
+				
+				model.addAttribute("error", "can't add yourself as a contact or add an already existant contact !");
+				return "addcontact";
+			}
+			
+		} else {
+			model.addAttribute("errorNotFound", "user doesn't exist !");
 			return "addcontact";
 		}
+				
+		
+	
+		
 	
 		
 	}

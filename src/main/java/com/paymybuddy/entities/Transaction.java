@@ -11,7 +11,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 
 @Entity
@@ -22,12 +26,15 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long transactionId;
 	
-	@Column(name = "beneficiary_id")
+	@OneToOne()
+	@JoinColumn( name = "beneficiary_id")
 	private User beneficiary;
 	
+	@NotBlank
 	@Column(name = "description")
 	private String description;
 	
+	@Positive
 	@Column(name = "amount")
 	private double amount;
 
