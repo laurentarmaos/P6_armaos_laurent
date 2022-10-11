@@ -42,7 +42,7 @@
 					<br>
 					
 					<div class="bg-light" style="margin:0px; padding:2rem;">
-						<form th:action="@{/transactions}" th:object="${transaction}" method="POST">
+						<form th:action="@{'/transactions/' + ${currentPage}}" th:object="${transaction}" method="POST">
 						
 						<p class="text-danger" th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.errors('global')}" th:text="${error}"></p>
 					        <div class="row">

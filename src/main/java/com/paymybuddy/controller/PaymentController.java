@@ -92,8 +92,8 @@ public class PaymentController {
 	}
 	
 	
-	@PostMapping("/transactions")
-	public @ResponseBody String payContact(@ModelAttribute("friend") User friend, @ModelAttribute("transaction") Transaction transaction, Model model) {
+	@PostMapping("/transactions/{pageNo}")
+	public @ResponseBody String payContact(@PathVariable (value = "pageNo") int pageNo, @ModelAttribute("friend") User friend, @ModelAttribute("transaction") Transaction transaction, Model model) throws Exception {
 		
 		if(!userRepo.existsByEmail(friend.getEmail())) {
 			model.addAttribute("errorNotFound", "user doesn't exist !");
