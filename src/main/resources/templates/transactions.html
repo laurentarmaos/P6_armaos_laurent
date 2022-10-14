@@ -98,7 +98,7 @@
 						</thead>
 						<tbody>
 							<tr th:each="transac : ${transacs}">
-								<td class="text-center" th:text="${transac.beneficiary.firstName}"></td>
+								<td class="text-center" th:text="${transac.beneficiary.email}"></td>
 								<td class="text-center" th:text="${transac.description}"></td>
 								<td class="text-center" th:text="${transac.amount}"></td>
 							</tr>

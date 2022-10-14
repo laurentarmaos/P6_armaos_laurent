@@ -40,7 +40,7 @@ public class PaymentController {
 	}
 	
 	@PostMapping("/accounts")
-	public @ResponseBody String addAmountFromAccount(@ModelAttribute("updateUserAccount") User dto) {
+	public String addAmountFromAccount(@ModelAttribute("updateUserAccount") User dto) {
 		service.addAmountFromAccount(dto);
 		return "accounts";
 	}
@@ -93,26 +93,26 @@ public class PaymentController {
 	
 	
 	@PostMapping("/transactions/{pageNo}")
-	public @ResponseBody String payContact(@PathVariable (value = "pageNo") int pageNo, @ModelAttribute("friend") User friend, @ModelAttribute("transaction") Transaction transaction, Model model) throws Exception {
+	public String payContact(@PathVariable (value = "pageNo") int pageNo, @ModelAttribute("friend") User friend, @ModelAttribute("transaction") Transaction transaction, Model model) throws Exception {
 		
 		if(!userRepo.existsByEmail(friend.getEmail())) {
 			model.addAttribute("errorNotFound", "user doesn't exist !");
-			return "transactions"; 
+			return showTransactionForm(pageNo, model); 
 		}
 		
 		if(transaction.getDescription().isBlank()) {
 			model.addAttribute("errorDesc", "description is mandatory !");
-			return "transactions";
+			return showTransactionForm(pageNo, model);
 		}
 		
 			
 		try {
 			service.payContact(friend, transaction);
-			return "transactions";
+			return showTransactionForm(pageNo, model);
 			
 		} catch (Exception e) {
-			model.addAttribute("error","not enough amount on your user account to proceed !");
-			return "transactions";
+			model.addAttribute("error","not enough amount on your user account to proceed or invalid value!");
+			return showTransactionForm(pageNo, model);
 		}
 		
 		

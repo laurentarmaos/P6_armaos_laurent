@@ -49,9 +49,11 @@ public class UserController {
 	
 	
 	@PostMapping("/register")
-	public @ResponseBody void createUser(@Valid @ModelAttribute("user") User user) {
+	public String createUser(@Valid @ModelAttribute("user") User user) {
 
 		service.createUser(user);
+		
+		return "index";
 	}
 
 	
